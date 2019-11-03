@@ -22,7 +22,7 @@ class ProductsController extends VoyagerBaseController
     use BreadRelationshipParser;
 
     public function index(Request $request)
-    {
+    {        
         // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);
 

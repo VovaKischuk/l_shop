@@ -85,7 +85,7 @@ class ShopController extends Controller
                            ->orWhere('description', 'like', "%$query%")
                            ->paginate(10);
         
-        $products = Product::search($query)->paginate(10);
+        // $products = Product::search($query)->paginate(10);
 
         return view('search-results')->with('products', $products);
     }

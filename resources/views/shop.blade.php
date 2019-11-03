@@ -55,9 +55,29 @@
             <div class="products text-center">
                 @forelse ($products as $product)
                     <div class="product">
-                        <a href="{{ route('shop.show', $product->slug) }}"><img src="{{ productImage($product->image) }}" alt="product"></a>
+                        <a href="{{ route('shop.show', $product->slug) }}">
+                            <img src="{{ productImage($product->image) }}" alt="product">
+                        </a>
                         <a href="{{ route('shop.show', $product->slug) }}"><div class="product-name">{{ $product->name }}</div></a>
                         <div class="product-price">{{ $product->presentPrice() }}</div>
+                        <div class="short_description">
+                            {{ $product->short_description }}
+                        </div>
+                        
+                        <div class="product_button">
+                            @if ($product->quantity > 0)
+                                <form action="{{ route('cart.store', $product) }}" method="POST">
+                                    {{ csrf_field() }}
+                                    <button type="submit" class="button button-plain">
+                                        <img src="img/cart.png" />
+                                    </button>
+                                </form>
+                            @endif
+
+                            <a class="detail" href="{{ route('shop.show', $product->slug) }}">
+                                Detail
+                            </a>
+                        </div>
                     </div>
                 @empty
                     <div style="text-align: left">No items found</div>

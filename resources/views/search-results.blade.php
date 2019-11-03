@@ -37,26 +37,18 @@
         <p class="search-results-count">{{ $products->total() }} result(s) for '{{ request()->input('query') }}'</p>
 
         @if ($products->total() > 0)
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Details</th>
-                    <th>Description</th>
-                    <th>Price</th>
-                </tr>
-            </thead>
-            <tbody>
+            <div class="products text-center">
                 @foreach ($products as $product)
-                    <tr>
-                        <th><a href="{{ route('shop.show', $product->slug) }}">{{ $product->name }}</a></th>
-                        <td>{{ $product->details }}</td>
-                        <td>{{ str_limit($product->description, 80) }}</td>
-                        <td>{{ $product->presentPrice() }}</td>
-                    </tr>
+                    <div class="product">
+                        <a href="{{ route('shop.show', $product->slug) }}"><img src="{{ productImage($product->image) }}" alt="product"></a>
+                        <a href="{{ route('shop.show', $product->slug) }}"><div class="product-name">{{ $product->name }}</div></a>
+                        <div class="product-price">{{ $product->presentPrice() }}</div>
+                        <div class="short_description">
+                            {{ $product->short_description }}
+                        </div>
+                    </div>
                 @endforeach
-            </tbody>
-        </table>
+            </div>
 
         {{ $products->appends(request()->input())->links() }}
         @endif
