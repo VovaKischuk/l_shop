@@ -85,6 +85,15 @@
                                                 <input type="checkbox" name="row_id" id="checkbox_{{ $data->id }}" value="{{ $data->id }}">
                                             </td>
                                         @endcan
+                                        
+                                        <?php                                             
+                                            foreach ($dataType->browseRows as $row) {
+                                                if (!is_string($row->details)) {
+                                                    $row->details = json_encode($row->details);
+                                                }                                               
+                                            }                                            
+                                        ?>
+
                                         @foreach($dataType->browseRows as $row)
                                             <td>
                                                 <?php $options = json_decode($row->details); ?>

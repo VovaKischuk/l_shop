@@ -37,6 +37,11 @@ class Product extends Model
         return $this->belongsToMany('App\Category');
     }
 
+    public function labels()
+    {
+        return $this->belongsToOne('App\ProductLabel');
+    }
+
     public function presentPrice()
     {
         return $this->price.' USD'; //money_format('$%i', $this->price / 100);
@@ -58,6 +63,7 @@ class Product extends Model
 
         $extraFields = [
             'categories' => $this->categories->pluck('name')->toArray(),
+            'product_labels' => $this->labels->pluck('name')->toArray(),
         ];
 
         return array_merge($array, $extraFields);

@@ -113,9 +113,22 @@ class ProductsController extends VoyagerBaseController
             ? app($dataType->model_name)->findOrFail($id)
             : DB::table($dataType->name)->where('id', $id)->first(); // If Model doest exist, get data from table name
 
-        foreach ($dataType->editRows as $key => $row) {
-            $details = json_decode($row->details);
-            $dataType->editRows[$key]['col_width'] = isset($details->width) ? $details->width : 100;
+        // foreach ($dataType->editRows as $key => $row) {
+            
+        //     var_dump($row->details);
+            
+        //     if (!is_string($row->details)) {
+        //         $row->details = json_encode($row->details);
+        //     }
+        // }
+
+        // die;
+
+        foreach ($dataType->editRows as $key => $row) {            
+            if (is_string($row->details)) {
+                $details = json_decode($row->details);
+                $dataType->editRows[$key]['col_width'] = isset($details->width) ? $details->width : 100;                 
+            }
         }
 
         // If a column has a relationship associated with it, we do not want to show that field

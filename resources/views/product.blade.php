@@ -141,7 +141,7 @@
                 <div>
                     <span class="review_user">{{ $value->user_name }}</span>
                         <i class="fa fa-star"></i> {{ $value->mark }} 
-                    <span class='review_time'>{{ $value->time }}</span>
+                    <span class='review_time'>{{ $value->created_at }}</span>
                 </div>
             
                 <div class="review_text">{{ $value->review }}</div>                 

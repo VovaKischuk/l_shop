@@ -51,11 +51,17 @@
                             @endphp
                             
                             @foreach($dataTypeRows as $row)
-                                <!-- GET THE DISPLAY OPTIONS -->
-                                @php
-                                    $options = json_decode($row->details);
+                                <!-- GET THE DISPLAY OPTIONS -->                                
+                                
+                                <?php
+                                    if (is_string($row->details)) {
+                                        $options = json_decode($row->details);
+                                    } else {
+                                        $options = $row->details;
+                                    }
                                     $display_options = isset($options->display) ? $options->display : NULL;
-                                @endphp
+                                ?>
+                                
                                 @if ($options && isset($options->formfields_custom))
                                     @include('voyager::formfields.custom.' . $options->formfields_custom)
                                 @else
