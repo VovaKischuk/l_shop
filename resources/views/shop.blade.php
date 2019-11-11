@@ -76,7 +76,7 @@
                             @endif
 
                             @if ($product->quantity > 0)
-                                <form action="{{ route('cart.store', $product) }}" method="POST">
+                                <form action="{{ route('wishlist.store', $product) }}" method="POST">
                                     {{ csrf_field() }}
                                     <button type="submit" class="button button-plain wishlist">
                                         <img src="/img/wishlist_white.png" />

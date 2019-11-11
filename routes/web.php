@@ -5,11 +5,24 @@ Route::get('/', 'LandingPageController@index')->name('landing-page');
 Route::get('/shop', 'ShopController@index')->name('shop.index');
 Route::get('/shop/{product}', 'ShopController@show')->name('shop.show');
 
+// CART CONTROLLER
+
 Route::get('/cart', 'CartController@index')->name('cart.index');
 Route::post('/cart/{product}', 'CartController@store')->name('cart.store');
 Route::patch('/cart/{product}', 'CartController@update')->name('cart.update');
 Route::delete('/cart/{product}', 'CartController@destroy')->name('cart.destroy');
 Route::post('/cart/switchToSaveForLater/{product}', 'CartController@switchToSaveForLater')->name('cart.switchToSaveForLater');
+
+// END CART CONTROLLER
+
+// ADD WISHLIST CONTROLLER
+
+Route::get('/wishlist', 'WishlistController@index')->name('wishlist.index');
+Route::post('/wishlist/{product}', 'WishlistController@store')->name('wishlist.store');
+Route::patch('/wishlist/{product}', 'WishlistController@update')->name('wishlist.update');
+Route::delete('/wishlist/{product}', 'WishlistController@destroy')->name('wishlist.destroy');
+
+// END WISHLIST CONTROLLER
 
 Route::delete('/saveForLater/{product}', 'SaveForLaterController@destroy')->name('saveForLater.destroy');
 Route::post('/saveForLater/switchToCart/{product}', 'SaveForLaterController@switchToCart')->name('saveForLater.switchToCart');

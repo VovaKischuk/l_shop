@@ -114,6 +114,6 @@ class CartController extends Controller
             ->add($item->id, $item->name, 1, $item->price)
             ->associate('App\Product');
 
-        return redirect()->route('cart.index')->with('success_message', 'Item has been Saved For Later!');
+        return redirect()->route('wishlist.index')->with('success_message', 'Item has been Saved For Later!');
     }
 }
