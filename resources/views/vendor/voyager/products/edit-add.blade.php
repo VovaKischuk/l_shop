@@ -92,6 +92,15 @@
                                 </ul>
                             </div> <!-- end form-group -->
 
+                            <div class="form-group">
+                                <label>Releted Product</label>
+                                <select class="" name="list_product_r[]" multiple="multiple">
+                                    @foreach ($list_product_r as $product)
+                                        <option value="{{ $product['id'] }}" {{ $relationForProduct->contains($product) ? 'selected' : '' }} >{{ $product['name'] }}</options>
+                                    @endforeach
+                                </select>
+                            </div>
+
                         </div><!-- panel-body -->
 
                         <div class="panel-footer">

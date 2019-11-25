@@ -101,6 +101,33 @@
                         <!-- Used to display form errors -->
                         <div id="card-errors" role="alert"></div>
                     </div>
+
+                    <h2>Shipping Details</h2>
+                    
+                    <div class="form-group">
+                        <label for="shipping-element">
+                            City
+                        </label>
+                        <div class="shipping_list">
+                            <select class="load_list_department">
+                                <?php foreach ($list_np_city as $key => $value) { ?>
+                                    <option value="<?php echo $value->Ref; ?>" ><?php echo $value->Description; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>      
+
+                    <div class="form-group">
+                        <label for="shipping-elements">
+                            Departmen
+                        </label>
+                        <div class="load_list_departmant_2">
+                            <select class="list_department_2">
+                                    
+                            </select>
+                        </div>
+                    </div>   
+
                     <div class="spacer"></div>
 
                     <button type="submit" id="complete-order" class="button-primary full-width">Complete Order</button>
@@ -127,8 +154,6 @@
                     </div>
                 @endif
             </div>
-
-
 
             <div class="checkout-table-container">
                 <h2>Your Order</h2>
@@ -317,4 +342,20 @@
 
         })();
     </script>
+
+    <script>
+        
+        $('select.load_list_department').on('change', function() {
+            
+            $.ajax({
+                method: 'GET',
+                url: "/list_np_vd",
+                success: function (data, textStatus) {
+                    $('.list_department_2').html(data);                                        
+                }
+            });            
+        });
+
+    </script>
+
 @endsection

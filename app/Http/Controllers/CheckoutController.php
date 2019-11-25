@@ -28,8 +28,6 @@ class CheckoutController extends Controller
             return redirect()->route('shop.index');
         }
 
-        $this->nova_posta();
-
         if (auth()->user() && request()->is('guestCheckout')) {
             return redirect()->route('checkout.index');
         }
@@ -47,11 +45,18 @@ class CheckoutController extends Controller
             $paypalToken = null;
         }
 
+        // START
+
+        $list_np_city = $this->nova_posta();
+        
+        // END
+
         return view('checkout')->with([
             'paypalToken' => $paypalToken,
             'discount' => getNumbers()->get('discount'),
             'newSubtotal' => getNumbers()->get('newSubtotal'),
             'newTax' => getNumbers()->get('newTax'),
+            'list_np_city' => $list_np_city,
             'newTotal' => getNumbers()->get('newTotal'),
         ]);
     }
@@ -246,34 +251,68 @@ class CheckoutController extends Controller
     }
 
     protected function nova_posta() {
-        $curl = curl_init();
+        $api = '9416c9cecb4652cd73eb5967581f6db2';
+
+        $ch = curl_init();
+        $json = '{
+            "apiKey": "'.$api.'",
+            "modelName": "Address",
+            "calledMethod": "getCities",
+            "methodProperties": {
+                "Page": "1"
+            }
+        }';
+
+        curl_setopt($ch, CURLOPT_URL, 'https://api.novaposhta.ua/v2.0/json/');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Content-Type: json"));
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        $response = curl_exec($ch);
+        $response = json_decode($response);
+        curl_close($ch);
+
+        return $response->data;
+    }
+    
+
+    public function list_np_vd() {
         
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.novaposhta.ua/v2.0/json/",
-            CURLOPT_RETURNTRANSFER => True,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => " {
-                                        \r\n\"apiKey\": \"f94f0b00c272f55685ea0d1e27baab69\",
-                                        \r\n\"modelName\": \"Common\",
-                                        \r\n\"calledMethod\": \"getServiceTypes\",
-                                        \r\n\"methodProperties\": {}\r\n
-                                    }",
-            CURLOPT_HTTPHEADER => array("content-type: application/json",),
-        ));
-        
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-        curl_close($curl);
-        if ($err) {
-            echo "cURL Error #:" . $err;
-        } else {
-            echo $response;
+        $api = '9416c9cecb4652cd73eb5967581f6db2';
+        $np_city_ref = 'e221d642-391c-11dd-90d9-001a92567626';
+
+        $json = '{
+            "apiKey": "'.$api.'",
+            "modelName": "Address",
+            "calledMethod": "getWarehouses",
+            "methodProperties": {
+                "CityRef": "'.$np_city_ref.'"
+            }
+        }';
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://api.novaposhta.ua/v2.0/json/');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Content-Type: json"));
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        $response = curl_exec($ch);        
+        curl_close($ch);
+        $response = json_decode($response);
+                
+        $option_string = '';
+        foreach ($response->data as $key => $value) {
+            $option_string .= '<option value='.$value->CityRef.' >'.$value->Description.'</option>';     
         }
 
-        var_dump(json_decode($response)); 
-        die;         
+        echo $option_string;
 
+        // echo $response;
+        die;
     }
 
 }

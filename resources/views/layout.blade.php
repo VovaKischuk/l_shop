@@ -21,6 +21,8 @@
         <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
         <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
 
+        <script type="text/javascript" src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+
         @yield('extra-css')
     </head>
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Voyager;
 use App\Product;
 use App\Category;
 use App\CategoryProduct;
+use App\ProductsRelations;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
@@ -113,17 +114,6 @@ class ProductsController extends VoyagerBaseController
             ? app($dataType->model_name)->findOrFail($id)
             : DB::table($dataType->name)->where('id', $id)->first(); // If Model doest exist, get data from table name
 
-        // foreach ($dataType->editRows as $key => $row) {
-            
-        //     var_dump($row->details);
-            
-        //     if (!is_string($row->details)) {
-        //         $row->details = json_encode($row->details);
-        //     }
-        // }
-
-        // die;
-
         foreach ($dataType->editRows as $key => $row) {            
             if (is_string($row->details)) {
                 $details = json_decode($row->details);
@@ -151,7 +141,24 @@ class ProductsController extends VoyagerBaseController
         $product = Product::find($id);
         $categoriesForProduct = $product->categories()->get();
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'allCategories', 'categoriesForProduct'));
+        // LIST RELETED PRODUCT
+
+        $relationForProduct = $product->relation()->get();
+        var_dump($relationForProduct);
+        die;
+        $allProducts = Product::all();
+        $list_product = array();
+
+        foreach ($allProducts as $key => $value) {
+            if ($value->id == $product->id) {
+                unset($allProducts[$key]);
+            } else {
+                $list_product_r[$key]['id'] = $value->id;
+                $list_product_r[$key]['name'] = $value->name;
+            }            
+        }
+                
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'allCategories', 'list_product_r', 'relationForProduct', 'categoriesForProduct'));        
     }
 
     // POST BR(E)AD
@@ -188,6 +195,9 @@ class ProductsController extends VoyagerBaseController
 
             // Re-insert if there's at least one category checked
             $this->updateProductCategories($request, $id);
+
+            // ADD / UPDATE PRODCUT RELATION PRODCUT
+            $this->updateProductRelation($request, $data->id);
 
             return redirect()
                 ->route("voyager.{$dataType->slug}.index")
@@ -268,6 +278,9 @@ class ProductsController extends VoyagerBaseController
 
             $this->updateProductCategories($request, $data->id);
 
+            // ADD / UPDATE PRODCUT RELATION PRODCUT
+            $this->updateProductRelation($request, $data->id);
+
             return redirect()
                 ->route("voyager.{$dataType->slug}.index")
                 ->with([
@@ -288,4 +301,18 @@ class ProductsController extends VoyagerBaseController
             }
         }
     }
+
+    protected function updateProductRelation(Request $request, $id) {
+        
+        if ($request->list_product_r) {
+            foreach ($request->list_product_r as $product) {
+                ProductsRelations::create([
+                    'product_id' => $id,
+                    'product_related_id' => $product,
+                ]);
+            }            
+        }
+        
+    }
+
 }

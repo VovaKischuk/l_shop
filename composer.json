@@ -21,7 +21,8 @@
         "nicolaslopezj/searchable": "^1.9",
         "stripe/stripe-php": "^7.3",
         "tcg/voyager": "1.2.*",
-        "twbs/bootstrap": "4.3.1"
+        "twbs/bootstrap": "4.3.1",
+        "serj1chen/nova-poshta-sdk-php": "2.0.*"
     },
     "require-dev": {
         "filp/whoops": "~2.0",
