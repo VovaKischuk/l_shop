@@ -15,50 +15,28 @@
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
         <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
 
-        <!-- ADD BOOTSTRAP  -->
+        <!-- FAVICON  -->
+        <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}">
 
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <!-- ADD BOOTSTRAP  -->
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+        <script type="text/javascript" src="{{ asset('js/bootstrap.js') }}"></script>
+
+        <script type="text/javascript" src="{{ asset('js/script.js') }}"></script>
 
     </head>
 
     <body>
         <div id="app">
-            <header class="with-background">
-                <div class="rigth_top_information">
-                    <div class="container">
-                        <div class="email_information">
-                            <span>info@gmail.com</span>
-                        </div>
-                        <div class="phone_information">
-                            <span>+380900000000</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="top_nav_row">
-                    <div class="top-nav container">
-                        <div class="top-nav-left">
-                            <div class="logo">GN-Techics</div>
-                            {{ menu('main', 'partials.menus.main') }}
-                        </div>
-                        <div class="header_search">
-                            @include('partials.search') 
-                        </div>
-                        <div class="top-nav-right">
-                            @include('partials.menus.main-right')
-                        </div>
-                    </div> <!-- end top-nav -->
-                </div>
-                <div class="hero">
-                    
+
+            @include('partials.nav')
+
+            <div class="hero">
                 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
                             <img src="img/slider_1.jpg" class="d-block w-100" alt="...">
                         </div>
-                        <div class="carousel-item">
-                            <img src="img/slider_2.jpg" class="d-block w-100" alt="...">
-                        </div>                        
                     </div>
                     <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -68,9 +46,8 @@
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                         <span class="sr-only">Next</span>
                     </a>
-                    </div>
-                </div> <!-- end hero -->
-            </header>
+                </div>
+            </div>
 
             <div class="featured-section">
                 <div class="container">
@@ -81,7 +58,7 @@
                                     <div class="up_block">
                                         <div class="category_block">
                                             <a href="{{ route('shop.index', ['category' => $category->slug]) }}">
-                                                <img src="img/{{ $category->img }}">
+                                                <img src="img/{{ $category['image'] }}">
                                             </a>                                        
                                         </div>
                                         <div class="category_name">
@@ -94,20 +71,6 @@
 
                         <div class="col-md-12">
                             <p class="section-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore vitae nisi, consequuntur illum dolores cumque pariatur quis provident deleniti nesciunt officia est reprehenderit sunt aliquid possimus temporibus enim eum hic lorem.</p>
-
-                            <div class="text-center button-container">
-                                <a href="#" class="button">Featured</a>
-                                <a href="#" class="button">On Sale</a>
-                            </div>
-
-                            {{-- <div class="tabs">
-                                <div class="tab">
-                                    Featured
-                                </div>
-                                <div class="tab">
-                                    On Sale
-                                </div>
-                            </div> --}}
 
                             <div class="products text-center">
                                 @foreach ($products as $product)
@@ -129,6 +92,12 @@
 
             </div> <!-- end featured-section -->
 
+            <div class="main_action">
+                <div class="container">
+                    <img src="/img/main_action.jpg">
+                </div>
+            </div>
+
             <div class="lorem_info_text">
                 <div class="container">
                     <div class="row">
@@ -142,9 +111,9 @@
                 </div>
             </div>
 
-            @include('partials.footer')
+            @include('partials.footer')            
 
         </div> <!-- end #app -->
-        <!-- <script src="js/app.js"></script> -->
+        
     </body>
 </html>

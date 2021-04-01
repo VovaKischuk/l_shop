@@ -5,6 +5,7 @@ namespace App;
 // use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
 use Nicolaslopezj\Searchable\SearchableTrait;
+use App\ProductsRelations;
 
 class Product extends Model
 {
@@ -43,7 +44,7 @@ class Product extends Model
     }
 
     public function relation() {
-        return $this->belongsToMany('App\ProductsRelations');        
+        return $this->hasMany('App\ProductsRelations');        
     }
 
     public function presentPrice()

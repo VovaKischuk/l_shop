@@ -2,10 +2,6 @@
 
 @section('title', 'Products')
 
-@section('extra-css')
-    <link rel="stylesheet" href="{{ asset('css/algolia.css') }}">
-@endsection
-
 @section('content')
 
     @component('components.breadcrumbs')
@@ -43,10 +39,16 @@
             <div class="filter">
                 <h3>Filter</h3>
                 <form action="{{route('shop.index')}}" method="get">
-                    <span>Min price: </span>
-                    <input name="min_price" type="" value="0" />
-                    <span>Max Price: </span>
-                    <input name="max_price" type="text" value="" />
+                    <div class="filter_block">
+                        <span>Min price: </span>
+                        <input name="min_price" type="" value="0" />
+                    </div>
+                    
+                    <div class="filter_block">
+                        <span>Max Price: </span>
+                        <input name="max_price" type="text" value="" />
+                    </div>
+
                     <button type="submit" class="button button-plain filter">
                         Filter
                     </button>
@@ -69,8 +71,10 @@
                     <div class="product">
                         <a class="image" href="{{ route('shop.show', $product->slug) }}">
                             <img src="{{ productImage($product->image) }}" alt="product">
-                            <span class="label">New</span>
-                        </a>
+                            @if (App\ProductLabel::getNameLabel($product->label_id))                        
+                                <span class="label">{{App\ProductLabel::getNameLabel($product->label_id)}}</span>
+                            @endif
+                        </a> 
                         <a href="{{ route('shop.show', $product->slug) }}"><div class="product-name">{{ $product->name }}</div></a>
                         <div class="product-price">{{ $product->presentPrice() }}</div>
                         <div class="short_description">
@@ -87,7 +91,7 @@
                                 </form>
                             @endif
                             
-                            @if (isset(Auth::user()->id)) 
+                            @if (isset(Auth::user()->id))
 
                                 @if ($product->quantity > 0)
                                     <form action="{{route('wishlist.store')}}" id="contact_form" method="post">
@@ -125,11 +129,4 @@
         </div>
     </div>
     
-@endsection
-
-@section('extra-js')
-    <!-- Include AlgoliaSearch JS Client and autocomplete.js library -->
-    <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script>
-    <script src="{{ asset('js/algolia.js') }}"></script>
 @endsection

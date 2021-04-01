@@ -30,8 +30,8 @@
                         @endforeach
                     </ul>
                 </div>
-            @endif            
-            
+            @endif
+
             <div class="cart-table">
                 @foreach ($wishlists as $wishlist)
                 <div class="cart-table-row">
@@ -46,7 +46,7 @@
                     </div>
                     
                     <div class="cart-table-actions">
-                        <form action="{{ route('wishlist.destroy', $wishlist->product) }}" method="POST">
+                        <form action="{{ route('wishlist.destroy', $wishlist->product) }}" method="POST">                        
                             {{ csrf_field() }}
                             {{ method_field('DELETE') }}
 

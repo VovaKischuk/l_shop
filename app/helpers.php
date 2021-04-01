@@ -4,7 +4,7 @@ use Carbon\Carbon;
 
 function presentPrice($price)
 {
-    return $price . ' USD'; //money_format('$%i', $price / 100);
+    return $price.' USD';
 }
 
 function presentDate($date)

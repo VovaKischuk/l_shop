@@ -21,9 +21,9 @@ class WishlistController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-      $user = Auth::user();
-      $wishlists = Wishlist::where("user_id", "=", $user->id)->orderby('id', 'desc')->paginate(10);
-      return view('wishlist', compact('user', 'wishlists'));
+        $user = Auth::user();
+        $wishlists = Wishlist::where("user_id", "=", $user->id)->orderby('id', 'desc')->paginate(10);
+        return view('wishlist', compact('user', 'wishlists'));
     }
 
     /**
@@ -34,21 +34,18 @@ class WishlistController extends Controller {
      */
     public function store(Request $request) {
         $this->validate($request, array(
-        'user_id'=>'required',
-        'product_id' =>'required',
+            'user_id'=>'required',
+            'product_id' =>'required',
         ));
 
-        $status=Wishlist::where('user_id',Auth::user()->id)
-        ->where('product_id',$request->product_id)
-        ->first();
+        $status = Wishlist::where('user_id',Auth::user()->id)
+                            ->where('product_id',$request->product_id)
+                            ->first();
 
-        if(isset($status->user_id) and isset($request->product_id))
-        {
-            return redirect()->back()->with('flash_messaged', 'This item is already in your 
-            wishlist!');
-        }
-        else
-        {
+        if(isset($status->user_id) and isset($request->product_id)) {
+            return redirect()->back()->with('flash_messaged', 'This item is already in your wishlist!');
+        } else {
+
             $wishlist = new Wishlist;
 
             $wishlist->user_id = $request->user_id;
@@ -95,18 +92,16 @@ class WishlistController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-      $wishlist = Wishlist::findOrFail($id);
-      $wishlist->delete();
 
-      return redirect()->route('wishlist.index')
+    public function destroy($id) {
+
+        $wishlist = Wishlist::findOrFail($id);
+        var_dump($wishlist); die;
+        $wishlist->delete();
+
+        return redirect()->route('wishlist.index')
           ->with('flash_message',
            'Item successfully deleted');
-    }
-
-    public function count_wishlist() {
-        
-    }
+    }    
 
 }

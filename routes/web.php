@@ -13,16 +13,17 @@ Route::patch('/cart/{product}', 'CartController@update')->name('cart.update');
 Route::delete('/cart/{product}', 'CartController@destroy')->name('cart.destroy');
 Route::post('/cart/switchToSaveForLater/{product}', 'CartController@switchToSaveForLater')->name('cart.switchToSaveForLater');
 
-// END CART CONTROLLER
+//// END CART CONTROLLER
 
 // ADD WISHLIST CONTROLLER
 
 Route::resource('/wishlist', 'WishlistController', ['except' => ['create', 'edit', 'show', 'update']]);
+Route::delete('/wishlist/{product}', 'WishlistController@destroy')->name('wishlist.destroy');
 
 // END WISHLIST CONTROLLER
 
-Route::delete('/saveForLater/{product}', 'SaveForLaterController@destroy')->name('saveForLater.destroy');
-Route::post('/saveForLater/switchToCart/{product}', 'SaveForLaterController@switchToCart')->name('saveForLater.switchToCart');
+//Route::delete('/saveForLater/{product}', 'SaveForLaterController@destroy')->name('saveForLater.destroy');
+//Route::post('/saveForLater/switchToCart/{product}', 'SaveForLaterController@switchToCart')->name('saveForLater.switchToCart');
 
 Route::post('/coupon', 'CouponsController@store')->name('coupon.store');
 Route::delete('/coupon', 'CouponsController@destroy')->name('coupon.destroy');
@@ -30,16 +31,20 @@ Route::delete('/coupon', 'CouponsController@destroy')->name('coupon.destroy');
 Route::get('/checkout', 'CheckoutController@index')->name('checkout.index')->middleware('auth');
 Route::post('/checkout', 'CheckoutController@store')->name('checkout.store');
 
-Route::get('/list_np_vd', 'CheckoutController@list_np_vd')->name('checkout.list_np_vd');
-
-Route::post('/paypal-checkout', 'CheckoutController@paypalCheckout')->name('checkout.paypal');
+//// thanks back
+//
+//Route::post('/thanks_checkout', 'CheckoutController@thanks_checkout')->name('checkout.thanks_checkout');
+//
+//// list
+//Route::get('/list_np_vd', 'CheckoutController@list_np_vd')->name('checkout.list_np_vd');
+//
+//Route::post('/paypal-checkout', 'CheckoutController@paypalCheckout')->name('checkout.paypal');
 
 Route::get('/guestCheckout', 'CheckoutController@index')->name('guestCheckout.index');
 
-
-Route::get('/thankyou', 'ConfirmationController@index')->name('confirmation.index');
-
-
+//Route::get('/thankyou', 'ConfirmationController@index')->name('confirmation.index');
+//
+//
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });

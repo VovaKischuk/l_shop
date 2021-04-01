@@ -27,12 +27,12 @@ class CartUpdatedListener
      */
     public function handle($event)
     {
-        $couponName = session()->get('coupon')['name'];
-
-        if ($couponName) {
-            $coupon = Coupon::where('code', $couponName)->first();
-
-            dispatch_now(new UpdateCoupon($coupon));
-        }
+//        $couponName = session()->get('coupon')['name'];
+//
+//        if ($couponName) {
+//            $coupon = Coupon::where('code', $couponName)->first();
+//
+//            dispatch_now(new UpdateCoupon($coupon));
+//        }
     }
 }

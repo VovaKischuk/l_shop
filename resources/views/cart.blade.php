@@ -35,7 +35,7 @@
             @if (Cart::count() > 0)
 
             <h2>{{ Cart::count() }} item(s) in Shopping Cart</h2>
-
+            
             <div class="cart-table">
                 @foreach (Cart::content() as $item)
                 <div class="cart-table-row">
@@ -43,7 +43,7 @@
                         <a href="{{ route('shop.show', $item->model->slug) }}"><img src="{{ productImage($item->model->image) }}" alt="item" class="cart-table-img"></a>
                         <div class="cart-item-details">
                             <div class="cart-table-item"><a href="{{ route('shop.show', $item->model->slug) }}">{{ $item->model->name }}</a></div>
-                            <div class="cart-table-description">{{ $item->model->details }}</div>
+                            
                         </div>
                     </div>
                     <div class="cart-table-row-right">                        
@@ -146,8 +146,9 @@
                     <div class="cart-table-row-left">
                         <a href="{{ route('shop.show', $item->model->slug) }}"><img src="{{ asset('img/products/'.$item->model->slug.'.jpg') }}" alt="item" class="cart-table-img"></a>
                         <div class="cart-item-details">
-                            <div class="cart-table-item"><a href="{{ route('shop.show', $item->model->slug) }}">{{ $item->model->name }}</a></div>
-                            <div class="cart-table-description">{{ $item->model->details }}</div>
+                            <div class="cart-table-item">
+                            <a href="{{ route('shop.show', $item->model->slug) }}">{{ $item->model->name }}</a></div>
+                            <div class="cart-table-description"><?php //echo $item->model->details ?></div>
                         </div>
                     </div>
                     <div class="cart-table-row-right">

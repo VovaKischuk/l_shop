@@ -24,8 +24,6 @@ class OrdersController extends VoyagerBaseController
 
         // Compatibility with Model binding.
         $id = $id instanceof Model ? $id->{$id->getKeyName()} : $id;
-        var_dump($dataType);
-        die;    
         $relationships = $this->getRelationships($dataType);
         if (strlen($dataType->model_name) != 0) {
             $model = app($dataType->model_name);

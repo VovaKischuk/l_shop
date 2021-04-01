@@ -144,8 +144,7 @@ class ProductsController extends VoyagerBaseController
         // LIST RELETED PRODUCT
 
         $relationForProduct = $product->relation()->get();
-        var_dump($relationForProduct);
-        die;
+        
         $allProducts = Product::all();
         $list_product = array();
 
@@ -157,8 +156,17 @@ class ProductsController extends VoyagerBaseController
                 $list_product_r[$key]['name'] = $value->name;
             }            
         }
-                
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'allCategories', 'list_product_r', 'relationForProduct', 'categoriesForProduct'));        
+
+        $relationForProductArray = array();
+
+        if (!empty($relationForProduct)) {
+            foreach ($relationForProduct as $key => $value) {
+                $relationForProductArray[] = $value->product_related_id;            
+            }
+        } 
+
+        
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'allCategories', 'list_product_r', 'relationForProductArray', 'categoriesForProduct'));        
     }
 
     // POST BR(E)AD
@@ -181,7 +189,7 @@ class ProductsController extends VoyagerBaseController
 
         if ($val->fails()) {
             return response()->json(['errors' => $val->messages()]);
-        }
+        }        
 
         if (!$request->ajax()) {
             $requestNew = $request;
@@ -303,6 +311,8 @@ class ProductsController extends VoyagerBaseController
     }
 
     protected function updateProductRelation(Request $request, $id) {
+        
+        DB::table('products_relations')->where('product_id', '=', $id)->delete();
         
         if ($request->list_product_r) {
             foreach ($request->list_product_r as $product) {
