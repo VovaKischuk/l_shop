@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\Category;
 use Illuminate\Http\Request;
+use App\Wishlist;
 
 class LandingPageController extends Controller
 {
@@ -16,7 +17,7 @@ class LandingPageController extends Controller
     public function index()
     {
         $products = Product::where('featured', true)->take(8)->inRandomOrder()->get();
-
+        
         $pagination = 9;
         $categories = Category::all();
 
@@ -28,11 +29,14 @@ class LandingPageController extends Controller
         } else {
             $categoryName = 'Featured';
         }
-
+        
+        $wishlist = new Wishlist;
+        
         return view('landing-page')->with([
             'products' => $products,
             'categories' => $categories,
-            'categoryName' => $categoryName,
+            'categoryName' => $categoryName,            
+            'wishlist' => $wishlist
         ]);
     }
 }

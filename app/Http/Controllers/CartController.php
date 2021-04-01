@@ -6,9 +6,10 @@ use App\Product;
 use Illuminate\Http\Request;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Validator;
+use App\Wishlist;
 
-class CartController extends Controller
-{
+class CartController extends Controller {
+
     /**
      * Display a listing of the resource.
      *
@@ -17,6 +18,8 @@ class CartController extends Controller
     public function index()
     {
         $mightAlsoLike = Product::mightAlsoLike()->get();
+
+        $wishlist = new Wishlist;
         
         return view('cart')->with([
             'mightAlsoLike' => $mightAlsoLike,
@@ -24,6 +27,7 @@ class CartController extends Controller
             'newSubtotal' => getNumbers()->get('newSubtotal'),
             'newTax' => getNumbers()->get('newTax'),
             'newTotal' => getNumbers()->get('newTotal'),
+            'wishlist' => $wishlist
         ]);
     }
 
@@ -38,14 +42,14 @@ class CartController extends Controller
         $duplicates = Cart::search(function ($cartItem, $rowId) use ($product) {
             return $cartItem->id === $product->id;
         });
-
+        
         if ($duplicates->isNotEmpty()) {
             return redirect()->route('cart.index')->with('success_message', 'Item is already in your cart!');
         }
-
+        
         Cart::add($product->id, $product->name, 1, $product->price)
             ->associate('App\Product');
-
+        
         return redirect()->route('cart.index')->with('success_message', 'Item was added to your cart!');
     }
 
@@ -61,7 +65,7 @@ class CartController extends Controller
         $validator = Validator::make($request->all(), [
             'quantity' => 'required|numeric|between:1,5'
         ]);
-
+        
         if ($validator->fails()) {
             session()->flash('errors', collect(['Quantity must be between 1 and 5.']));
             return response()->json(['success' => false], 400);
@@ -71,7 +75,7 @@ class CartController extends Controller
             session()->flash('errors', collect(['We currently do not have enough items in stock.']));
             return response()->json(['success' => false], 400);
         }
-
+        
         Cart::update($id, $request->quantity);
         session()->flash('success_message', 'Quantity was updated successfully!');
         return response()->json(['success' => true]);

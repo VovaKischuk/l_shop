@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Order;
 use App\Product;
+use App\LiqPay as LiqPay;
 use App\OrderProduct;
 use App\Mail\OrderPlaced;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use App\Http\Requests\CheckoutRequest;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Cartalyst\Stripe\Laravel\Facades\Stripe;
 use Cartalyst\Stripe\Exception\CardErrorException;
+use App\Wishlist;
 
 use function GuzzleHttp\json_decode;
 
@@ -27,12 +29,12 @@ class CheckoutController extends Controller
         if (Cart::instance('default')->count() == 0) {
             return redirect()->route('shop.index');
         }
-
-        $this->nova_posta();
-
+        
         if (auth()->user() && request()->is('guestCheckout')) {
             return redirect()->route('checkout.index');
         }
+
+        $wishlist = new Wishlist;
 
         $gateway = new \Braintree\Gateway([
             'environment' => config('services.braintree.environment'),
@@ -47,12 +49,20 @@ class CheckoutController extends Controller
             $paypalToken = null;
         }
 
+        // START
+
+        $list_np_city = $this->nova_posta();
+        
+        // END
+
         return view('checkout')->with([
             'paypalToken' => $paypalToken,
             'discount' => getNumbers()->get('discount'),
             'newSubtotal' => getNumbers()->get('newSubtotal'),
             'newTax' => getNumbers()->get('newTax'),
+            'list_np_city' => $list_np_city,
             'newTotal' => getNumbers()->get('newTotal'),
+            'wishlist' => $wishlist
         ]);
     }
 
@@ -69,26 +79,36 @@ class CheckoutController extends Controller
         if ($this->productsAreNoLongerAvailable()) {
             return back()->withErrors('Sorry! One of the items in your cart is no longer avialble.');
         }
-
+        
         $contents = Cart::content()->map(function ($item) {
             return $item->model->slug.', '.$item->qty;
         })->values()->toJson();
+        
+        try {        
+            $public_key = 'sandbox_i9354876144';
+            $private_key = 'sandbox_IVYuRhbKf3nD6Nqq97OHOGd8fCCENtRScLPje5MX';
+            
+            $liqpay = new LiqPay($public_key, $private_key);
+                                        
+            $html = $liqpay->cnb_form(array(
+                'action'         => 'pay',
+                'amount'         =>  getNumbers()->get('newTotal'),
+                'currency'       => 'UAH',
+                'description'    => 'Payment for the product',
+                'order_id'       => $this->addToOrdersTables($request, null)->id,
+                'version'        => '3',
+                'result_url'    => 'http://127.0.0.1:8000/thanks_checkout'
+            ));
 
-        try {
-            $charge = Stripe::charges()->create([
-                'amount' => getNumbers()->get('newTotal') / 100,
-                'currency' => 'CAD',
-                'source' => $request->stripeToken,
-                'description' => 'Order',
-                'receipt_email' => $request->email,
-                'metadata' => [
-                    'contents' => $contents,
-                    'quantity' => Cart::instance('default')->count(),
-                    'discount' => collect(session()->get('coupon'))->toJson(),
-                ],
+            // $request = $liqpay->api($request, $data);                        
+            
+            return view('form_liqpay')->with([
+                'html' => $html
             ]);
 
+            die;
             $order = $this->addToOrdersTables($request, null);
+            
             Mail::send(new OrderPlaced($order));
 
             // decrease the quantities of all the products in the cart
@@ -246,34 +266,86 @@ class CheckoutController extends Controller
     }
 
     protected function nova_posta() {
-        $curl = curl_init();
+        $api = '9416c9cecb4652cd73eb5967581f6db2';
+
+        $ch = curl_init();
+        $json = '{
+            "apiKey": "'.$api.'",
+            "modelName": "Address",
+            "calledMethod": "getCities",
+            "methodProperties": {
+                "Page": "1"
+            }
+        }';
+
+        curl_setopt($ch, CURLOPT_URL, 'https://api.novaposhta.ua/v2.0/json/');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Content-Type: json"));
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        $response = curl_exec($ch);
+        $response = json_decode($response);
+        curl_close($ch);
+
+        return $response->data;
+    }
+    
+
+    public function list_np_vd(Request $request) {
         
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.novaposhta.ua/v2.0/json/",
-            CURLOPT_RETURNTRANSFER => True,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => " {
-                                        \r\n\"apiKey\": \"f94f0b00c272f55685ea0d1e27baab69\",
-                                        \r\n\"modelName\": \"Common\",
-                                        \r\n\"calledMethod\": \"getServiceTypes\",
-                                        \r\n\"methodProperties\": {}\r\n
-                                    }",
-            CURLOPT_HTTPHEADER => array("content-type: application/json",),
-        ));
-        
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-        curl_close($curl);
-        if ($err) {
-            echo "cURL Error #:" . $err;
-        } else {
-            echo $response;
+        $input = $request->all();
+        $api = '9416c9cecb4652cd73eb5967581f6db2';
+        $np_city_ref = $input['ref_city'];
+
+        $json = '{
+            "apiKey": "'.$api.'",
+            "modelName": "Address",
+            "calledMethod": "getWarehouses",
+            "methodProperties": {
+                "CityRef": "'.$np_city_ref.'"
+            }
+        }';
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://api.novaposhta.ua/v2.0/json/');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Content-Type: json"));
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        $response = curl_exec($ch);        
+        curl_close($ch);
+        $response = json_decode($response);
+                
+        $option_string = '';
+        foreach ($response->data as $key => $value) {
+            $option_string .= '<option value='.$value->CityRef.' >'.$value->Description.'</option>';     
         }
 
-        var_dump(json_decode($response)); 
-        die;         
+        echo $option_string;
 
+        die;
+    }
+
+    // public_key sandbox_i9354876144
+    // private_key sandbox_IVYuRhbKf3nD6Nqq97OHOGd8fCCENtRScLPje5MX
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function thanks_checkout() {     
+        
+        $wishlist = new Wishlist;
+
+        return view('thanks_checkout')->with([
+            'wishlist' => $wishlist
+        ]);
     }
 
 }

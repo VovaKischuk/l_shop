@@ -18,8 +18,6 @@ class ProductsReviewController extends Controller
      */
     public function store(Request $request)
     {
-        var_dump('store');
-        die;
         $coupon = Coupon::where('code', $request->coupon_code)->first();
 
         if (!$coupon) {

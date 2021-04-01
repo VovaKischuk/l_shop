@@ -16,23 +16,29 @@
         <link href="https://fonts.googleapis.com/css?family=Montserrat%7CRoboto:300,400,700" rel="stylesheet">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
+        <!-- ADD BOOTSTRAP  -->
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+        <script type="text/javascript" src="{{ asset('js/bootstrap.js') }}"></script>
+
         <!-- Styles -->
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
         <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
         <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
 
+        <script type="text/javascript" src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/script.js') }}"></script>
         @yield('extra-css')
     </head>
 
 
-<body class="@yield('body-class', '')">
-    @include('partials.nav')
+    <body class="@yield('body-class', '')">
+        @include('partials.nav')
 
-    @yield('content')
+        @yield('content')
 
-    @include('partials.footer')
+        @include('partials.footer')
 
-    @yield('extra-js')
+        @yield('extra-js')
 
-</body>
+    </body>
 </html>

@@ -5,6 +5,7 @@ namespace App;
 // use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
 use Nicolaslopezj\Searchable\SearchableTrait;
+use App\ProductsRelations;
 
 class Product extends Model
 {
@@ -42,9 +43,13 @@ class Product extends Model
         return $this->belongsToOne('App\ProductLabel');
     }
 
+    public function relation() {
+        return $this->hasMany('App\ProductsRelations');        
+    }
+
     public function presentPrice()
     {
-        return $this->price.' USD'; //money_format('$%i', $this->price / 100);
+        return $this->price.' USD'; 
     }
 
     public function scopeMightAlsoLike($query)
@@ -67,6 +72,22 @@ class Product extends Model
         ];
 
         return array_merge($array, $extraFields);
-    }    
+    }  
+    
+    public function wishlist(){
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function scopeFilter($query, $params) {
+        if ( isset($params['min_price']) && trim($params['min_price'] !== '') ) {
+            $query->where('price', ' >=', trim($params['min_price']));
+        }        
+        
+        if ( isset($params['max_price']) && trim($params['max_price']) !== '' ) {
+            $query->where('price', '<=', trim($params['max_price']));
+        }
+        
+        return $query;
+    }
 
 }

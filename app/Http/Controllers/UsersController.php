@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Wishlist;
 
 class UsersController extends Controller
 {
@@ -55,7 +56,12 @@ class UsersController extends Controller
      */
     public function edit()
     {
-        return view('my-profile')->with('user', auth()->user());
+        $wishlist = new Wishlist;
+
+        return view('my-profile')->with([
+            'user' => auth()->user(),
+            'wishlist' => $wishlist
+        ]);
     }
 
     /**

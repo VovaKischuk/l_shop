@@ -9,7 +9,7 @@
         }
     </style>
 
-    <script src="https://js.stripe.com/v3/"></script>
+    <!-- <script src="https://js.stripe.com/v3/"></script> -->
 
 @endsection
 
@@ -52,7 +52,7 @@
                     </div>
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ auth()->user()->name }}" required>
                     </div>
                     <div class="form-group">
                         <label for="address">Address</label>
@@ -68,45 +68,80 @@
                             <label for="province">Province</label>
                             <input type="text" class="form-control" id="province" name="province" value="{{ old('province') }}" required>
                         </div>
-                    </div> <!-- end half-form -->
-
-                    <div class="half-form">
-                        <div class="form-group">
-                            <label for="postalcode">Postal Code</label>
-                            <input type="text" class="form-control" id="postalcode" name="postalcode" value="{{ old('postalcode') }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Phone</label>
-                            <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" required>
-                        </div>
-                    </div> <!-- end half-form -->
+                    </div>
+                    <div class="form-group">
+                        <label for="postalcode">Postal Code</label>
+                        <input type="text" class="form-control" id="postalcode" name="postalcode" value="{{ old('postalcode') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="text" class="form-control" id="phone" name="phone" value="{{ auth()->user()->phone }}" required>
+                    </div>
 
                     <div class="spacer"></div>
 
-                    <h2>Payment Details</h2>
+                    <!-- <h2>Payment Details</h2> -->
 
-                    <div class="form-group">
-                        <label for="name_on_card">Name on Card</label>
-                        <input type="text" class="form-control" id="name_on_card" name="name_on_card" value="">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="card-element">
-                          Credit or debit card
-                        </label>
-                        <div id="card-element">
-                          <!-- a Stripe Element will be inserted here. -->
+                    <!-- <div class="stripe_payment">
+                                                
+                        <div class="form-group" style="display:flex; margin-top: 15px;">
+                            <input type="radio" name="radio_payment_group" value="1" style="max-width: 20px; margin-left: 0px; margin-top: 7px;" />  
+                            <label for="card-element">
+                                Cash on delivery
+                            </label>                                                      
                         </div>
 
-                        <!-- Used to display form errors -->
-                        <div id="card-errors" role="alert"></div>
-                    </div>
-                    <div class="spacer"></div>
+                        <div class="form-group" style="display:flex; margin-top: 15px;">
+                            <input type="radio" name="radio_payment_group" value="2" style="max-width: 20px; margin-left: 0px; margin-top: 7px;">
+                            <label>
+                                LIQPAY
+                            </label>
+                        </div>
+
+                    </div> -->
+
+                    <h2>Shipping Details</h2>
+                    
+                    <div class="nova_posta">
+                        <img src="{{asset('/img/nova_p.jpg')}}" />
+                        <div class="form-group">
+                            <label for="shipping-element">
+                                City
+                            </label>
+                            <div class="shipping_list">
+                                <select class="load_list_department">
+                                    <?php foreach ($list_np_city as $key => $value) { ?>
+                                        <option value="<?php echo $value->Ref; ?>" ><?php echo $value->Description; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>      
+
+                        <div class="form-group department">
+                            <label for="shipping-elements">
+                                Departmen
+                            </label>
+                            <div class="load_list_departmant_2">
+                                <select class="list_department_2">
+                                        
+                                </select>
+                            </div>
+                        </div>
+                    </div>   
+
+                    <div class="spacer"></div>                    
 
                     <button type="submit" id="complete-order" class="button-primary full-width">Complete Order</button>
-
+                    <input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
 
                 </form>
+
+                <form method="POST" accept-charset="utf-8" action="https://www.liqpay.ua/api/3/checkout">
+                    <input type="hidden" name="data" value="eyJ2ZXJzaW9uIjozLCJhY3Rpb24iOiJwYXkiLCJwdWJsaWNfa2V5IjoiaTkwNjI2NDY4OTgzIiwiYW1vdW50IjoiNSIsImN1cnJlbmN5IjoiVUFIIiwiZGVzY3JpcHRpb24iOiLQnNC+0Lkg0YLQvtCy0LDRgCIsInR5cGUiOiJidXkiLCJsYW5ndWFnZSI6InJ1In0=" />
+                    <input type="hidden" name="signature" value="0yOSOO1GW9FQmdNp8H0zX+Matq8=" />
+                    
+                </form>
+
                 
                 @if ($paypalToken)
                     <div class="mt-32">or</div>
@@ -128,8 +163,6 @@
                 @endif
             </div>
 
-
-
             <div class="checkout-table-container">
                 <h2>Your Order</h2>
 
@@ -140,7 +173,7 @@
                             <img src="{{ productImage($item->model->image) }}" alt="item" class="checkout-table-img">
                             <div class="checkout-item-details">
                                 <div class="checkout-table-item">{{ $item->model->name }}</div>
-                                <div class="checkout-table-description">{{ $item->model->details }}</div>
+                                <!-- <div class="checkout-table-description">{{ $item->model->details }}</div> -->
                                 <div class="checkout-table-price">{{ $item->model->presentPrice() }}</div>
                             </div>
                         </div> <!-- end checkout-table -->
@@ -187,9 +220,9 @@
 @endsection
 
 @section('extra-js')
-    <script src="https://js.braintreegateway.com/web/dropin/1.13.0/js/dropin.min.js"></script>
+    <!-- <script src="https://js.braintreegateway.com/web/dropin/1.13.0/js/dropin.min.js"></script> -->
 
-    <script>
+    <!-- <script>
         (function(){
             // Create a Stripe client
             var stripe = Stripe('{{ config('services.stripe.key') }}');
@@ -316,5 +349,30 @@
             });
 
         })();
+    </script> -->
+
+    <script>
+        
+        $('select.load_list_department').on('change', function() {
+            
+            var ref_city = $('.load_list_department option:selected').val();
+            var _token = $("input[name='_token']").val();
+            
+            $.ajax({
+                type: 'GET',
+                url: "/list_np_vd",
+                data: {
+                    'ref_city': ref_city,
+                    _token:_token
+                },
+
+                success: function (data, textStatus) {
+                    $('.list_department_2').html(data);
+                    $('.department').show();
+                }
+            });            
+        });
+
     </script>
+
 @endsection

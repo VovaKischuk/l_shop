@@ -7,6 +7,8 @@ use App\Category;
 use Illuminate\Http\Request;
 use DB;
 use Dotenv\Regex\Result;
+use App\ProductLabel;
+use App\Wishlist;
 
 class ShopController extends Controller
 {
@@ -15,11 +17,11 @@ class ShopController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
+        
         $pagination = 9;
         $categories = Category::all();
-
+        
         if (request()->category) {
             $products = Product::with('categories')->whereHas('categories', function ($query) {
                 $query->where('slug', request()->category);
@@ -38,10 +40,17 @@ class ShopController extends Controller
             $products = $products->paginate($pagination);
         }
 
+        foreach ($products as $product) {
+            // ProductLabel::getNameLabel($product->label_id);
+        }
+        
+        $wishlist = new Wishlist;
+
         return view('shop')->with([
             'products' => $products,
             'categories' => $categories,
             'categoryName' => $categoryName,
+            'wishlist' => $wishlist
         ]);
     }
 
@@ -52,23 +61,29 @@ class ShopController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($slug)
-    {
+    {        
         $product = Product::where('slug', $slug)->firstOrFail();
         $mightAlsoLike = Product::where('slug', '!=', $slug)->mightAlsoLike()->get();
-                
+        
         $stockLevel = getStockLevel($product->quantity);
         $user = auth()->user();
 
         $review = $this->getReview($product->id);
         $modeReview = $this->modaReview($product->id);
         
-        return view('product')->with([
+        $relationProduct = $this->getRelationProduct($product->id); 
+        
+        $wishlist = new Wishlist;
+
+        return view('product')->with([            
             'product' => $product,
             'review' => $review,
             'modeReview' => $modeReview,
             'user' => $user,    
             'stockLevel' => $stockLevel,
             'mightAlsoLike' => $mightAlsoLike,
+            'relationProduct' => $relationProduct,
+            'wishlist' => $wishlist
         ]);
     }
 
@@ -86,8 +101,11 @@ class ShopController extends Controller
                            ->paginate(10);
         
         // $products = Product::search($query)->paginate(10);
-
-        return view('search-results')->with('products', $products);
+        $wishlist = new Wishlist;
+        return view('search-results')->with([
+            'products' => $products,
+            'wishlist' => $wishlist
+        ]);
     }
 
     public function searchAlgolia(Request $request)
@@ -106,14 +124,14 @@ class ShopController extends Controller
         $time = date("Y-m-d H:i:s");
         
         $data = array(
-                    'product_id'=>$product_id,
-                    'user_id'=>$user_id,
-                    'user_name'=>$user_name,
-                    'user_email'=>$user_email,
-                    'time'=>$time,
-                    'mark'=>$mark,
-                    'review'=>$review,
-                    'publish'=>1    
+                    'product_id' => $product_id,
+                    'user_id'    => $user_id,
+                    'user_name'  => $user_name,
+                    'user_email' => $user_email,
+                    'created_at' => $time,
+                    'mark'       => $mark,
+                    'review'     => $review,
+                    'publish'    => 0
                 );
 
         DB::table('products_reviews')->insert($data);
@@ -121,9 +139,10 @@ class ShopController extends Controller
     }
 
     public function getReview($product_id) {
-        $result = DB::table('products_reviews')->select('*')
+        $result = DB::table('products_reviews')
+                                    ->select('*')
                                     ->where('product_id', '=', $product_id)
-                                    ->orWhere('publish', '=', 1)->get();
+                                    ->where('publish', '=', 1)->get();
         
         return $result; 
     }
@@ -131,14 +150,24 @@ class ShopController extends Controller
     public function modaReview($product_id) {
         $result = DB::table('products_reviews')->select('mark')
                                     ->where('product_id', '=', $product_id)
-                                    ->orWhere('publish', '=', 1)->get();
+                                    ->where('publish', '=', 1)->get();
         
         $sum = 0;                            
         foreach($result as $review) {
             $sum += $review->mark;
         }
+        if (count($result) > 0) {
+            return $sum / count($result);        
+        } else {
+            return 0;
+        }
+        
+    }
 
-        return $sum / count($result);        
+    public function getRelationProduct($product_id) {
+        $result = DB::table('products_relations')->select('*')
+                                                ->where('product_id', '=', $product_id)->get();
+        return $result;                                                
     }
 
 }

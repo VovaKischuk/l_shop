@@ -92,6 +92,15 @@
                                 </ul>
                             </div> <!-- end form-group -->
 
+                            <div class="form-group">
+                                <label>Releted Product</label>
+                                <select class="" name="list_product_r[]" multiple="multiple">
+                                    @foreach ($list_product_r as $product)
+                                        <option value="{{ $product['id'] }}" <?php if ( in_array($product['id'], $relationForProductArray) ) { ?> selected="selected"<?php }?> >{{ $product['name'] }}</options>
+                                    @endforeach
+                                </select>
+                            </div>
+
                         </div><!-- panel-body -->
 
                         <div class="panel-footer">
@@ -194,10 +203,7 @@
 
                 $('#confirm_delete_modal').modal('hide');
             });
-            $('[data-toggle="tooltip"]').tooltip();
-
-            var price = $('input[name="price"').val();
-            $('input[name="price"').val(price / 100);
+            $('[data-toggle="tooltip"]').tooltip();            
         });
     </script>
 @stop

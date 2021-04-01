@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Wishlist;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -45,9 +46,14 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
+
         session()->put('previousUrl', url()->previous());
 
-        return view('auth.login');
+        $wishlist = new Wishlist;
+
+        return view('auth.login')->with([
+            'wishlist' => $wishlist
+        ]);
     }
 
     // override logout so cart contents remain:
