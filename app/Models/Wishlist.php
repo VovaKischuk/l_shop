@@ -1,8 +1,7 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -20,8 +19,14 @@ class Wishlist extends Model {
     }
 
     public function count_wishlist() {
-        $wishlists = DB::table('wishlists')->select('*')->where('user_id', '1')->get();
-        return count($wishlists);
+
+        $user = Auth::user();
+
+        if (isset($user) ) {
+            $wishlists = DB::table('wishlists')->select('*')->where('user_id', $user->id)->get();
+            return count($wishlists);
+        }
+
     }
 
 }

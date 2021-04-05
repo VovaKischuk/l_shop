@@ -143,24 +143,24 @@
                 </form>
 
                 
-                @if ($paypalToken)
-                    <div class="mt-32">or</div>
-                    <div class="mt-32">
-                        <h2>Pay with PayPal</h2>
+{{--                @if ($paypalToken)--}}
+{{--                    <div class="mt-32">or</div>--}}
+{{--                    <div class="mt-32">--}}
+{{--                        <h2>Pay with PayPal</h2>--}}
 
-                        <form method="post" id="paypal-payment-form" action="{{ route('checkout.paypal') }}">
-                            @csrf
-                            <section>
-                                <div class="bt-drop-in-wrapper">
-                                    <div id="bt-dropin"></div>
-                                </div>
-                            </section>
+{{--                        <form method="post" id="paypal-payment-form" action="{{ route('checkout.paypal') }}">--}}
+{{--                            @csrf--}}
+{{--                            <section>--}}
+{{--                                <div class="bt-drop-in-wrapper">--}}
+{{--                                    <div id="bt-dropin"></div>--}}
+{{--                                </div>--}}
+{{--                            </section>--}}
 
-                            <input id="nonce" name="payment_method_nonce" type="hidden" />
-                            <button class="button-primary" type="submit"><span>Pay with PayPal</span></button>
-                        </form>
-                    </div>
-                @endif
+{{--                            <input id="nonce" name="payment_method_nonce" type="hidden" />--}}
+{{--                            <button class="button-primary" type="submit"><span>Pay with PayPal</span></button>--}}
+{{--                        </form>--}}
+{{--                    </div>--}}
+{{--                @endif--}}
             </div>
 
             <div class="checkout-table-container">
@@ -314,7 +314,7 @@
 
             // PayPal Stuff
             var form = document.querySelector('#paypal-payment-form');
-            var client_token = "{{ $paypalToken }}";
+            var client_token = " //$paypalToken //}}";
 
             braintree.dropin.create({
               authorization: client_token,

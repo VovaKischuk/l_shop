@@ -30,12 +30,8 @@
 
                                     @if (Cart::instance('default')->count() > 0)
                                         <span class="cart-count">
-                                        {{ Cart::instance('default')->count() }}
-                                    </span>
-                                    @else
-                                        <span class="cart-count">
-                                        {{ Cart::instance('default')->count() }}
-                                    </span>
+                                            {{ Cart::instance('default')->count() }}
+                                        </span>
                                     @endif
 
                                 </a>

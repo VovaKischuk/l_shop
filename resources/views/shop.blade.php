@@ -33,7 +33,7 @@
             <h3>By Category</h3>
             <ul>
                 @foreach ($categories as $category)
-                    <li class="{{ setActiveCategory($category->slug) }}"><a href="{{ route('shop.index', ['category' => $category->slug]) }}">{{ $category->name }}</a></li>
+                    <li><a href="{{ route('shop.index', ['category' => $category->slug]) }}">{{ $category->name }}</a></li>
                 @endforeach
             </ul>
             <div class="filter">
@@ -41,7 +41,7 @@
                 <form action="{{route('shop.index')}}" method="get">
                     <div class="filter_block">
                         <span>Min price: </span>
-                        <input name="min_price" type="" value="0" />
+                        <input name="min_price" type="" value="" />
                     </div>
                     
                     <div class="filter_block">

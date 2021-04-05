@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Voyager;
 
-use App\Product;
+use App\Models\Product;
 use App\Category;
 use App\CategoryProduct;
 use App\ProductsRelations;

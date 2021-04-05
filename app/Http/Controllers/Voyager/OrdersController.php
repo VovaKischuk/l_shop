@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Voyager;
 
 use App\Order;
 use Validator;
-use App\Product;
+use App\Models\Product;
 use App\Category;
 use App\CategoryProduct;
 use Illuminate\Http\Request;

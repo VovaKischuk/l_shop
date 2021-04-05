@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Product;
+use App\Models\Product;
 use App\Category;
 use Illuminate\Http\Request;
-use App\Wishlist;
+use App\Models\Wishlist;
 
 class LandingPageController extends Controller
 {

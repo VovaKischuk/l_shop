@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Order;
-use App\Product;
+use App\Models\Product;
 use App\LiqPay as LiqPay;
 use App\OrderProduct;
 use App\Mail\OrderPlaced;
@@ -13,7 +13,7 @@ use App\Http\Requests\CheckoutRequest;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Cartalyst\Stripe\Laravel\Facades\Stripe;
 use Cartalyst\Stripe\Exception\CardErrorException;
-use App\Wishlist;
+use App\Models\Wishlist;
 
 use function GuzzleHttp\json_decode;
 
@@ -36,18 +36,18 @@ class CheckoutController extends Controller
 
         $wishlist = new Wishlist;
 
-        $gateway = new \Braintree\Gateway([
-            'environment' => config('services.braintree.environment'),
-            'merchantId' => config('services.braintree.merchantId'),
-            'publicKey' => config('services.braintree.publicKey'),
-            'privateKey' => config('services.braintree.privateKey')
-        ]);
-
-        try {
-            $paypalToken = $gateway->ClientToken()->generate();
-        } catch (\Exception $e) {
-            $paypalToken = null;
-        }
+//        $gateway = new \Braintree\Gateway([
+//            'environment' => config('services.braintree.environment'),
+//            'merchantId' => config('services.braintree.merchantId'),
+//            'publicKey' => config('services.braintree.publicKey'),
+//            'privateKey' => config('services.braintree.privateKey')
+//        ]);
+//
+//        try {
+//            $paypalToken = $gateway->ClientToken()->generate();
+//        } catch (\Exception $e) {
+//            $paypalToken = null;
+//        }
 
         // START
 
@@ -56,7 +56,7 @@ class CheckoutController extends Controller
         // END
 
         return view('checkout')->with([
-            'paypalToken' => $paypalToken,
+            //'paypalToken' => $paypalToken,
             'discount' => getNumbers()->get('discount'),
             'newSubtotal' => getNumbers()->get('newSubtotal'),
             'newTax' => getNumbers()->get('newTax'),

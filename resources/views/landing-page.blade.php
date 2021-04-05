@@ -58,7 +58,7 @@
                                     <div class="up_block">
                                         <div class="category_block">
                                             <a href="{{ route('shop.index', ['category' => $category->slug]) }}">
-                                                <img src="img/{{ $category['image'] }}">
+                                                <img src="{{ productImage($category['image']) }}">
                                             </a>                                        
                                         </div>
                                         <div class="category_name">

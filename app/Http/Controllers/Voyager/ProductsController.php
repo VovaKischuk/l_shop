@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Voyager;
 
-use App\Product;
+use App\Models\Product;
 use App\Category;
 use App\CategoryProduct;
 use App\ProductsRelations;
@@ -163,8 +163,7 @@ class ProductsController extends VoyagerBaseController
             foreach ($relationForProduct as $key => $value) {
                 $relationForProductArray[] = $value->product_related_id;            
             }
-        } 
-
+        }
         
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'allCategories', 'list_product_r', 'relationForProductArray', 'categoriesForProduct'));        
     }

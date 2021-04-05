@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Wishlist;
+use App\Models\Wishlist;
 use Auth;
 use App\Product;
 use Illuminate\Http\Request;

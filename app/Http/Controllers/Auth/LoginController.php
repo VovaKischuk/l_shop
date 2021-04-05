@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Wishlist;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -56,10 +56,8 @@ class LoginController extends Controller
         ]);
     }
 
-    // override logout so cart contents remain:
-    // https://github.com/Crinsane/LaravelShoppingcart/issues/253
-    public function logout(Request $request)
-    {
+    public function logout(Request $request) {
+
         $cart = collect(session()->get('cart'));
 
         $destination = \Auth::logout();

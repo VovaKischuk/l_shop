@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Product;
+use DB;
+use App\Models\Product;
 use App\Category;
 use Illuminate\Http\Request;
-use DB;
 use Dotenv\Regex\Result;
 use App\ProductLabel;
-use App\Wishlist;
+use App\Models\Wishlist;
 
 class ShopController extends Controller
 {
