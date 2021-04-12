@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Wishlist;
 use Auth;
-use App\Product;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Validator;

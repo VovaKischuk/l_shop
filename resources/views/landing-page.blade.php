@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>GN-Techics</title>
+        <title>Geek Shop</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Montserrat%7CRoboto:300,400,700" rel="stylesheet">
@@ -17,6 +17,7 @@
 
         <!-- FAVICON  -->
         <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}">
+        <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}">
 
         <!-- ADD BOOTSTRAP  -->
         <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">

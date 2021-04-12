@@ -1,5 +1,7 @@
 <?php
 
+    use App\Http\Controllers\Voyager\OtherController;
+
 Route::get('/', 'LandingPageController@index')->name('landing-page');
 
 Route::get('/shop', 'ShopController@index')->name('shop.index');
@@ -22,8 +24,8 @@ Route::delete('/wishlist/{product}', 'WishlistController@destroy')->name('wishli
 
 // END WISHLIST CONTROLLER
 
-//Route::delete('/saveForLater/{product}', 'SaveForLaterController@destroy')->name('saveForLater.destroy');
-//Route::post('/saveForLater/switchToCart/{product}', 'SaveForLaterController@switchToCart')->name('saveForLater.switchToCart');
+Route::delete('/saveForLater/{product}', 'SaveForLaterController@destroy')->name('saveForLater.destroy');
+Route::post('/saveForLater/switchToCart/{product}', 'SaveForLaterController@switchToCart')->name('saveForLater.switchToCart');
 
 Route::post('/coupon', 'CouponsController@store')->name('coupon.store');
 Route::delete('/coupon', 'CouponsController@destroy')->name('coupon.destroy');
@@ -42,12 +44,14 @@ Route::post('/checkout', 'CheckoutController@store')->name('checkout.store');
 
 Route::get('/guestCheckout', 'CheckoutController@index')->name('guestCheckout.index');
 
-//Route::get('/thankyou', 'ConfirmationController@index')->name('confirmation.index');
-//
-//
+Route::get('/thankyou', 'ConfirmationController@index')->name('confirmation.index');
+
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
+
+    Route::get('/other', [OtherController::class, 'index']);
 });
+
 
 Auth::routes();
 
@@ -55,8 +59,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/search', 'ShopController@search')->name('search');
 Route::post('/saveReview', 'ShopController@saveReview')->name('saveReview');
-
-
 Route::get('/search-algolia', 'ShopController@searchAlgolia')->name('search-algolia');
 
 Route::middleware('auth')->group(function () {
@@ -66,3 +68,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-orders', 'OrdersController@index')->name('orders.index');
     Route::get('/my-orders/{order}', 'OrdersController@show')->name('orders.show');
 });
+

@@ -188,7 +188,7 @@ class ProductsController extends VoyagerBaseController
 
         if ($val->fails()) {
             return response()->json(['errors' => $val->messages()]);
-        }        
+        }
 
         if (!$request->ajax()) {
             $requestNew = $request;
