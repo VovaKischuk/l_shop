@@ -10,8 +10,8 @@ class ProductsRelations extends Model {
     public $timestamps = false;
     public $fillable = ['product_id', 'product_related_id'];
 
-    // public function products() {
-    //     return $this->belongsToMany('App\Product', 'PIVOT', 'product_id', 'product_related_id');
-    // }
+     public function products() {
+         return $this->belongsToMany('App\Models\Product', 'PIVOT', 'product_id', 'product_related_id');
+     }
 
 }

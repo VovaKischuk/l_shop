@@ -1089,7 +1089,7 @@ footer {
 }
 
 footer .footer-content {
-    padding: 40px 0px;
+    padding: 40px 15px;
 }
 
 footer .footer-content .footer_header {
@@ -1107,10 +1107,10 @@ footer .footer_copiright {
     color: #c4c4c4;
 }
 
-.footer-content {
-    display: flex;
-    justify-content: space-between;
-}
+/*.footer-content {*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*}*/
 
 .footer-content .heart {
     color: #FFBABA;
@@ -1947,11 +1947,3 @@ h1.checkout-heading {
     }
 
 }
-
-
-
-
-
-
-
-

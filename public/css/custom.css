@@ -1,0 +1,29 @@
+.product_page .lst_rltd {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.product_page .lst_rltd .rel_block {
+    border: 1px solid #000;
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.product_page .lst_rltd .rel_block span {
+    display: block;
+    width: 100%;
+    text-align: center;
+    color: #000;
+    font-weight: bold;
+}
+
+.product_page .lst_rltd .rel_block input {
+    margin-right: 10px;
+}
+
+.product_page .lst_rltd .rel_block img {
+    max-width: 70px;
+    margin-bottom: 10px;
+}

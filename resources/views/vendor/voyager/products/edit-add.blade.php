@@ -15,9 +15,18 @@
 @stop
 
 @section('content')
-    <div class="page-content edit-add container-fluid">
+    <div class="page-content edit-add container-fluid product_page">
         <div class="row">
             <div class="col-md-12">
+
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item active">
+                        <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-details" role="tab" aria-controls="pills-home" aria-selected="true">Details</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-releted_products" role="tab" aria-controls="pills-profile" aria-selected="false">Related products</a>
+                    </li>
+                </ul>
 
                 <div class="panel panel-bordered">
                     <!-- form start -->
@@ -49,56 +58,68 @@
                             @php
                                 $dataTypeRows = $dataType->{(isset($dataTypeContent->id) ? 'editRows' : 'addRows' )};
                             @endphp
-                            
-                            @foreach($dataTypeRows as $row)
-                                <!-- GET THE DISPLAY OPTIONS -->                                
-                                
-                                <?php
-                                    if (is_string($row->details)) {
-                                        $options = json_decode($row->details);
-                                    } else {
-                                        $options = $row->details;
-                                    }
-                                    $display_options = isset($options->display) ? $options->display : NULL;
-                                ?>
-                                
-                                @if ($options && isset($options->formfields_custom))
-                                    @include('voyager::formfields.custom.' . $options->formfields_custom)
-                                @else
-                                    <div class="form-group @if($row->type == 'hidden') hidden @endif @if(isset($display_options->width)){{ 'col-md-' . $display_options->width }}@else{{ '' }}@endif" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
-                                        {{ $row->slugify }}
-                                        <label for="name">{{ $row->display_name }}</label>
-                                        @include('voyager::multilingual.input-hidden-bread-edit-add')
-                                        @if($row->type == 'relationship')
-                                            @include('voyager::formfields.relationship')
+
+                            <div class="tab-content" id="pills-tabContent">
+                                <div class="tab-pane fade active in" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab">
+                                    @foreach($dataTypeRows as $row)
+                                    <!-- GET THE DISPLAY OPTIONS -->
+
+                                        <?php
+                                        if (is_string($row->details)) {
+                                            $options = json_decode($row->details);
+                                        } else {
+                                            $options = $row->details;
+                                        }
+                                        $display_options = isset($options->display) ? $options->display : NULL;
+                                        ?>
+
+                                        @if ($options && isset($options->formfields_custom))
+                                            @include('voyager::formfields.custom.' . $options->formfields_custom)
                                         @else
-                                            {!! app('voyager')->formField($row, $dataType, $dataTypeContent) !!}
+                                            <div class="form-group @if($row->type == 'hidden') hidden @endif @if(isset($display_options->width)){{ 'col-md-' . $display_options->width }}@else{{ '' }}@endif" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
+                                                {{ $row->slugify }}
+                                                <label for="name">{{ $row->display_name }}</label>
+                                                @include('voyager::multilingual.input-hidden-bread-edit-add')
+                                                @if($row->type == 'relationship')
+                                                    @include('voyager::formfields.relationship')
+                                                @else
+                                                    {!! app('voyager')->formField($row, $dataType, $dataTypeContent) !!}
+                                                @endif
+
+                                                @foreach (app('voyager')->afterFormFields($row, $dataType, $dataTypeContent) as $after)
+                                                    {!! $after->handle($row, $dataType, $dataTypeContent) !!}
+                                                @endforeach
+                                            </div>
                                         @endif
-
-                                        @foreach (app('voyager')->afterFormFields($row, $dataType, $dataTypeContent) as $after)
-                                            {!! $after->handle($row, $dataType, $dataTypeContent) !!}
-                                        @endforeach
-                                    </div>
-                                @endif
-                            @endforeach
-
-                            <div class="form-group">
-                                <label>Categories</label>
-
-                                <ul style="list-style-type: none; padding-left: 0">
-                                @foreach ($allCategories as $category)
-                                    <li><label><input value="{{ $category->id }}" type="checkbox" name="category[]" style="margin-right: 5px;" {{ $categoriesForProduct->contains($category) ? 'checked' : '' }}>{{ $category->name }}</label></li>
-                                @endforeach
-                                </ul>
-                            </div> <!-- end form-group -->
-
-                            <div class="form-group">
-                                <label>Releted Product</label>
-                                <select class="" name="list_product_r[]" multiple="multiple">
-                                    @foreach ($list_product_r as $product)
-                                        <option value="{{ $product['id'] }}" <?php if ( in_array($product['id'], $relationForProductArray) ) { ?> selected="selected"<?php }?> >{{ $product['name'] }}</options>
                                     @endforeach
-                                </select>
+
+                                    <div class="form-group">
+                                        <label>Categories</label>
+
+                                        <ul style="list-style-type: none; padding-left: 0">
+                                            @foreach ($allCategories as $category)
+                                                <li><label><input value="{{ $category->id }}" type="checkbox" name="category[]" style="margin-right: 5px;" {{ $categoriesForProduct->contains($category) ? 'checked' : '' }}>{{ $category->name }}</label></li>
+                                            @endforeach
+                                        </ul>
+                                    </div> <!-- end form-group -->
+                                </div>
+
+                                <div class="tab-pane fade" id="pills-releted_products" role="tabpanel" aria-labelledby="pills-releted_products-tab">
+                                    <div class="form-group">
+                                        <label>Releted Product</label>
+                                        <div class="lst_rltd">
+                                            @foreach ($list_product_r as $product)
+                                                <div class="rel_block">
+                                                    <input name="list_product_r[]" type="checkbox" value="{{ $product['id'] }}" <?php if ( in_array($product['id'], $relationForProductArray) ) { ?> checked <?php }?> >
+                                                    <div>
+                                                        <img src="{{ productImage($product['image']) }}">
+                                                        <span>{{ $product['name'] }}</span>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                         </div><!-- panel-body -->

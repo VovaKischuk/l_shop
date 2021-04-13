@@ -19,6 +19,9 @@
         <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}">
         <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}">
 
+        <script type="text/javascript" src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/script.js') }}"></script>
+
         <!-- ADD BOOTSTRAP  -->
         <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
         <script type="text/javascript" src="{{ asset('js/bootstrap.js') }}"></script>
@@ -36,6 +39,12 @@
                 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
+                            <img src="img/slider_1.jpg" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="img/slider_1.jpg" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
                             <img src="img/slider_1.jpg" class="d-block w-100" alt="...">
                         </div>
                     </div>

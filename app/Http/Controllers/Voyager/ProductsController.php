@@ -23,7 +23,7 @@ class ProductsController extends VoyagerBaseController
     use BreadRelationshipParser;
 
     public function index(Request $request)
-    {        
+    {
         // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);
 
@@ -37,8 +37,9 @@ class ProductsController extends VoyagerBaseController
 
         $search = (object) ['value' => $request->get('s'), 'key' => $request->get('key'), 'filter' => $request->get('filter')];
         $searchable = $dataType->server_side ? array_keys(SchemaManager::describeTable(app($dataType->model_name)->getTable())->toArray()) : '';
-        $orderBy = $request->get('order_by');
-        $sortOrder = $request->get('sort_order', null);
+
+        $orderBy = $request->get('order_by', 'id');
+        $sortOrder = $request->get('sort_order', 'ASC');
 
         // Next Get or Paginate the actual content from the MODEL that corresponds to the slug DataType
         if (strlen($dataType->model_name) != 0) {
@@ -63,7 +64,7 @@ class ProductsController extends VoyagerBaseController
             } elseif ($model->timestamps) {
                 $dataTypeContent = call_user_func([$query->latest($model::CREATED_AT), $getter]);
             } else {
-                $dataTypeContent = call_user_func([$query->orderBy($model->getKeyName(), 'DESC'), $getter]);
+                $dataTypeContent = call_user_func([$query->orderBy($model->getKeyName(), 'ASC'), $getter]);
             }
 
             // Replace relationships' keys for labels and create READ links if a slug is provided.
@@ -144,9 +145,9 @@ class ProductsController extends VoyagerBaseController
         // LIST RELETED PRODUCT
 
         $relationForProduct = $product->relation()->get();
-        
         $allProducts = Product::all();
         $list_product = array();
+
 
         foreach ($allProducts as $key => $value) {
             if ($value->id == $product->id) {
@@ -154,6 +155,7 @@ class ProductsController extends VoyagerBaseController
             } else {
                 $list_product_r[$key]['id'] = $value->id;
                 $list_product_r[$key]['name'] = $value->name;
+                $list_product_r[$key]['image'] = $value->image;
             }            
         }
 
@@ -164,6 +166,8 @@ class ProductsController extends VoyagerBaseController
                 $relationForProductArray[] = $value->product_related_id;            
             }
         }
+
+        //var_dump($relationForProductArray);  die;
         
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'allCategories', 'list_product_r', 'relationForProductArray', 'categoriesForProduct'));        
     }
