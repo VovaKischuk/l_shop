@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Dotenv\Regex\Result;
 use App\ProductLabel;
 use App\Models\Wishlist;
+use Illuminate\Pagination\Paginator;
 
 class ShopController extends Controller
 {
@@ -21,7 +22,8 @@ class ShopController extends Controller
         
         $pagination = 9;
         $categories = Category::all();
-        
+        Paginator::useBootstrap();
+
         if (request()->category) {
             $products = Product::with('categories')->whereHas('categories', function ($query) {
                 $query->where('slug', request()->category);
@@ -41,7 +43,7 @@ class ShopController extends Controller
         }
 
         foreach ($products as $product) {
-            // ProductLabel::getNameLabel($product->label_id);
+            ProductLabel::getNameLabel($product->label_id);
         }
         
         $wishlist = new Wishlist;

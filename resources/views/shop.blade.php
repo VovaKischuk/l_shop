@@ -40,13 +40,9 @@
                 <h3>Filter</h3>
                 <form action="{{route('shop.index')}}" method="get">
                     <div class="filter_block">
-                        <span>Min price: </span>
-                        <input name="min_price" type="" value="" />
-                    </div>
-                    
-                    <div class="filter_block">
-                        <span>Max Price: </span>
-                        <input name="max_price" type="text" value="" />
+                        <label for="price"></label>
+                        <input type="range" name="price" value="" min="0" max="100000" oninput="this.nextElementSibling.value = this.value">
+                        <output>24</output>
                     </div>
 
                     <button type="submit" class="button button-plain filter">

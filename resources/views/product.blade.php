@@ -1,5 +1,5 @@
 <?php
-use App\Product;
+use App\Models\Product;
 ?>
 
 @extends('layout')
@@ -157,14 +157,17 @@ use App\Product;
 
     <div class="relation_product">
         <div class="products-section container">
+            <h2>Related product</h2>
             <div class="products text-center">
-                <?php foreach ($relationProduct as $key => $value) { 
-                    $product = Product::where('id', $value->product_related_id)->firstOrFail(); ?>
+                @foreach ($relationProduct as $key => $value)
+                    @php
+                      $product = Product::where('id', $value->product_related_id)->firstOrFail();
+                    @endphp
                     <div class="releted_product_block">
                         <div class="product">
                             <a class="image" href="{{ route('shop.show', $product->slug) }}">
                                 <img src="{{ productImage($product->image) }}" alt="product">
-                                @if (App\ProductLabel::getNameLabel($product->label_id))                        
+                                @if (App\ProductLabel::getNameLabel($product->label_id))
                                     <span class="label">{{App\ProductLabel::getNameLabel($product->label_id)}}</span>
                                 @endif
                             </a> 
@@ -213,7 +216,7 @@ use App\Product;
                             </div>            
                         </div>            
                     </div>
-                <?php } ?>
+                @endforeach
             </div>
         </div>
     </div>

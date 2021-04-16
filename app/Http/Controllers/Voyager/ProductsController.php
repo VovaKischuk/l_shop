@@ -115,10 +115,10 @@ class ProductsController extends VoyagerBaseController
             ? app($dataType->model_name)->findOrFail($id)
             : DB::table($dataType->name)->where('id', $id)->first(); // If Model doest exist, get data from table name
 
-        foreach ($dataType->editRows as $key => $row) {            
+        foreach ($dataType->editRows as $key => $row) {
             if (is_string($row->details)) {
                 $details = json_decode($row->details);
-                $dataType->editRows[$key]['col_width'] = isset($details->width) ? $details->width : 100;                 
+                $dataType->editRows[$key]['col_width'] = isset($details->width) ? $details->width : 100;
             }
         }
 
@@ -166,10 +166,8 @@ class ProductsController extends VoyagerBaseController
                 $relationForProductArray[] = $value->product_related_id;            
             }
         }
-
-        //var_dump($relationForProductArray);  die;
         
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'allCategories', 'list_product_r', 'relationForProductArray', 'categoriesForProduct'));        
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'allCategories', 'list_product_r', 'relationForProductArray', 'categoriesForProduct'));
     }
 
     // POST BR(E)AD
@@ -234,8 +232,10 @@ class ProductsController extends VoyagerBaseController
                             : false;
 
         foreach ($dataType->addRows as $key => $row) {
-            $details = json_decode($row->details);
-            $dataType->addRows[$key]['col_width'] = isset($details->width) ? $details->width : 100;
+            if (is_string($row->details)) {
+                $details = json_decode($row->details);
+                $dataType->addRows[$key]['col_width'] = isset($details->width) ? $details->width : 100;
+            }
         }
 
         // If a column has a relationship associated with it, we do not want to show that field
@@ -253,7 +253,20 @@ class ProductsController extends VoyagerBaseController
         $allCategories = Category::all();
         $categoriesForProduct = collect([]);
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'allCategories', 'categoriesForProduct'));
+        // LIST RELETED PRODUCT
+
+        $allProducts = Product::all();
+        $list_product = array();
+
+        foreach ($allProducts as $key => $value) {
+            $list_product_r[$key]['id'] = $value->id;
+            $list_product_r[$key]['name'] = $value->name;
+            $list_product_r[$key]['image'] = $value->image;
+        }
+
+        $relationForProductArray = array();
+
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'allCategories', 'categoriesForProduct', 'list_product_r', 'relationForProductArray'));
     }
 
     /**

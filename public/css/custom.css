@@ -9,6 +9,7 @@
     padding: 10px;
     display: flex;
     align-items: center;
+    max-width: 115px;
 }
 
 .product_page .lst_rltd .rel_block span {
@@ -26,4 +27,8 @@
 .product_page .lst_rltd .rel_block img {
     max-width: 70px;
     margin-bottom: 10px;
+}
+
+.voyager.products .nav-tabs>li.active>a:hover {
+    color: #000;
 }

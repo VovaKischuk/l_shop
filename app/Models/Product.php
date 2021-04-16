@@ -79,6 +79,7 @@ class Product extends Model
     }
 
     public function scopeFilter($query, $params) {
+        die;
         if ( isset($params['min_price']) && trim($params['min_price'] !== '') ) {
             $query->where('price', ' >=', trim($params['min_price']));
         }        
