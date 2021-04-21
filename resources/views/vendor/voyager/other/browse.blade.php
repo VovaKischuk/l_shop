@@ -14,6 +14,12 @@
     <div class="clearfix container-fluid row">
         <div class="col-md-12">
             <div class="list-other" style="display: flex; flex-wrap: wrap;">
+                <div class="block" style="width: 130px; border: 1px solid #000; padding: 10px; margin-right: 30px">
+                    <a target="_self" href="/admin/manufacturers">
+                        <span class="icon voyager-paint-bucket" style="font-size: 30px; display: block; color: #000; text-align: center;"></span>
+                        <span class="title" style="text-align: center; display: block;">Manufacturers</span>
+                    </a>
+                </div>
                 <div class="block" style="width: 130px; border: 1px solid #000; padding: 10px; margin-right: 30px;">
                     <a target="_self" href="/admin/product-labels">
                         <span class="icon voyager-new" style="font-size: 30px; display: block; color: #000; text-align: center;"></span>

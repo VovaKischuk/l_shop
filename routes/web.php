@@ -1,6 +1,6 @@
 <?php
 
-    use App\Http\Controllers\Voyager\OtherController;
+use App\Http\Controllers\Voyager\OtherController;
 
 Route::get('/', 'LandingPageController@index')->name('landing-page');
 

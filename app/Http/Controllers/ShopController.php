@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use DB;
 use App\Models\Product;
 use App\Category;
+use App\Models\Manufacturers;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Dotenv\Regex\Result;
 use App\ProductLabel;
@@ -18,10 +20,13 @@ class ShopController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index(Request $request) {
         
         $pagination = 9;
         $categories = Category::all();
+        $wishlist = new Wishlist;
+        $manufacturers = Manufacturers::all();
+
         Paginator::useBootstrap();
 
         if (request()->category) {
@@ -33,7 +38,18 @@ class ShopController extends Controller
             $products = Product::where('featured', true);
             $categoryName = 'Featured';
         }
-        
+
+        if ($request->filled('min_price')) {
+            $products = $products->where('price', '>=', $request->min_price);
+        }
+
+        if ($request->filled('max_price')) {
+            $products = $products->where('price', '<', $request->max_price);
+        }
+
+        $new_min_price = $request->min_price ? $request->min_price : 0;
+        $new_max_price = $request->max_price ? $request->max_price : 0;
+
         if (request()->sort == 'low_high') {
             $products = $products->orderBy('price')->paginate($pagination);
         } elseif (request()->sort == 'high_low') {
@@ -42,18 +58,15 @@ class ShopController extends Controller
             $products = $products->paginate($pagination);
         }
 
+
         foreach ($products as $product) {
             ProductLabel::getNameLabel($product->label_id);
         }
-        
-        $wishlist = new Wishlist;
 
-        return view('shop')->with([
-            'products' => $products,
-            'categories' => $categories,
-            'categoryName' => $categoryName,
-            'wishlist' => $wishlist
-        ]);
+        $min_price = Product::where('featured', true)->min('price');
+        $max_price = Product::where('featured', true)->max('price');
+
+        return view('shop', compact('products', 'categories', 'categoryName', 'wishlist', 'min_price', 'max_price', 'new_min_price', 'new_max_price', 'manufacturers') );
     }
 
     /**
@@ -77,16 +90,7 @@ class ShopController extends Controller
         
         $wishlist = new Wishlist;
 
-        return view('product')->with([            
-            'product' => $product,
-            'review' => $review,
-            'modeReview' => $modeReview,
-            'user' => $user,    
-            'stockLevel' => $stockLevel,
-            'mightAlsoLike' => $mightAlsoLike,
-            'relationProduct' => $relationProduct,
-            'wishlist' => $wishlist
-        ]);
+        return view('product', compact('product', 'review', 'modeReview', 'user', 'stockLevel', 'mightAlsoLike', 'relationProduct', 'wishlist') );
     }
 
     public function search(Request $request)
@@ -104,10 +108,7 @@ class ShopController extends Controller
         
         // $products = Product::search($query)->paginate(10);
         $wishlist = new Wishlist;
-        return view('search-results')->with([
-            'products' => $products,
-            'wishlist' => $wishlist
-        ]);
+        return view('search-results', compact('products', 'wishlist') );
     }
 
     public function searchAlgolia(Request $request)

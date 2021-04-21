@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use App\ProductsRelations;
 
@@ -41,6 +42,11 @@ class Product extends Model
     public function labels()
     {
         return $this->belongsToOne('App\ProductLabel');
+    }
+
+    public function manufacturers()
+    {
+        return $this->belongsToOne('App\Models\Manufacturers');
     }
 
     public function relation() {
@@ -90,5 +96,4 @@ class Product extends Model
         
         return $query;
     }
-
 }

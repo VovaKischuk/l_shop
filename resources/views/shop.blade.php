@@ -28,6 +28,21 @@
         @endif
     </div>
 
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="products-header">
+                    <h1 class="stylish-heading">{{ $categoryName }}</h1>
+                    <div>
+                        <strong>Price: </strong>
+                        <a href="{{ route('shop.index', ['category'=> request()->category, 'sort' => 'low_high']) }}">Low to High</a> |
+                        <a href="{{ route('shop.index', ['category'=> request()->category, 'sort' => 'high_low']) }}">High to Low</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="products-section container">
         <div class="sidebar">
             <h3>By Category</h3>
@@ -38,11 +53,26 @@
             </ul>
             <div class="filter">
                 <h3>Filter</h3>
-                <form action="{{route('shop.index')}}" method="get">
+                <form action="{{route('shop.index')}}" method="GET">
                     <div class="filter_block">
-                        <label for="price"></label>
-                        <input type="range" name="price" value="" min="0" max="100000" oninput="this.nextElementSibling.value = this.value">
-                        <output>24</output>
+                        <h4>Price</h4>
+                        <p class="price-filters">
+                            <input type="number" name="min_price" id="price-filter-min" value="{{ $new_min_price }}">
+                            <span>-</span>
+                            <input type="number" name="max_price" id="price-filter-max" value="{{ $new_max_price }}">
+                            <input type="submit" value="OK" class="price_ok">
+                        </p>
+                        <div id="slider-range" data-price-min="{{ $min_price }}" data-price-max="{{ $max_price }}"></div>
+                    </div>
+
+                    <div class="filter_block">
+                        <h4>Manufacturers</h4>
+                        @foreach ($manufacturers as $manufactur)
+                            <div>
+                                <input type="checkbox" name="manufacturer" value="{{ $manufactur->id }}">
+                                <label>{{ $manufactur->name }}</label>
+                            </div>
+                        @endforeach
                     </div>
 
                     <button type="submit" class="button button-plain filter">
@@ -50,17 +80,9 @@
                     </button>
                 </form>
             </div>
-        </div> 
-        <div>
-            <div class="products-header">
-                <h1 class="stylish-heading">{{ $categoryName }}</h1>
-                <div>
-                    <strong>Price: </strong>
-                    <a href="{{ route('shop.index', ['category'=> request()->category, 'sort' => 'low_high']) }}">Low to High</a> |
-                    <a href="{{ route('shop.index', ['category'=> request()->category, 'sort' => 'high_low']) }}">High to Low</a>
+        </div>
 
-                </div>
-            </div>
+        <div>
 
             <div class="products text-center">
                 @forelse ($products as $product)
@@ -118,7 +140,7 @@
                 @empty
                     <div style="text-align: left">No items found</div>
                 @endforelse
-            </div> <!-- end products -->
+            </div>
 
             <div class="spacer"></div>
             {{ $products->appends(request()->input())->links() }}

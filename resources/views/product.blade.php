@@ -90,35 +90,35 @@ use App\Models\Product;
                 <input type="hidden" name="product_id" value="{{ $product->id }}" />
                 
                 <div id="jshop_review_write" >
-                    <div class = "row">
-                        <div class = "col-md-3">
+                    <div class="row">
+                        <div class="col-md-3">
                             <?php print 'Name' ?>
                         </div>
-                        <div class = "col-md-3">
+                        <div class="col-md-3">
                             <input type="text" name="user_name" id="review_user_name" class="inputbox" value="<?php if (!empty($user->name) ) echo $user->name; ?>"/>
                         </div>
                     </div>
-                    <div class = "row-fluid">
-                        <div class = "span3">
+                    <div class="row">
+                        <div class="col-md-3">
                             <?php print 'Email' ?>
                         </div>
-                        <div class = "span9">
+                        <div class="col-md-9">
                             <input type="text" name="user_email" id="review_user_email" class="inputbox" value="<?php if(!empty($user->email)) echo $user->email; ?>" />
                         </div>
                     </div>
-                    <div class = "row-fluid">
-                        <div class = "span3">
+                    <div class="row">
+                        <div class="col-md-3">
                             <?php print 'Review' ?>
                         </div>
-                        <div class = "span9">
+                        <div class="col-md-9">
                             <textarea name="review" id="review_review" rows="4" cols="40" class="inputbox"></textarea>
                         </div>
                     </div>
-                    <div class = "row-fluid">
-                        <div class = "span3">
+                    <div class="row">
+                        <div class="col-md-4">
                             Rating for product
                         </div>
-                        <div class = "span9">
+                        <div class="col-md-8">
                             Bad
                             <?php for($i = 1; $i <= 5; $i++){ ?>
                                 <input name="mark" type="radio" class="star {split:<?php print 2 ?>}" value="<?php print $i?>" <?php if ($i==5){ ?>checked="checked"<?php } ?>/>
